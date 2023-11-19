@@ -1,0 +1,2 @@
+build:
+	emcc -O3 -o index.html main.c --shell-file template.html -Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces -Wunused-result -Os -L ../raylib/raylib/src -s USE_GLFW=3 -s ASYNCIFY -s TOTAL_MEMORY=67108864 -s FORCE_FILESYSTEM=1 ../raylib/lib/libraylib.a -DPLATFORM_WEB -s EXPORTED_RUNTIME_METHODS=ccall
