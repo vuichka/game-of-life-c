@@ -11,12 +11,12 @@
 // consts
 const int SCREEN_HEIGHT = 900;
 const int SCREEN_WIDTH = 1300;
-static int CELL_WIDTH = 3;
-static int CELL_HEIGHT = 3;
+static int CELL_WIDTH = 7;
+static int CELL_HEIGHT = 7;
 static int ROWS;
 static int COLS;
-static int ERASE_AREA = 3;
-static int UPDATE_SPEED = 0;
+static int ERASE_AREA = 5;
+static int UPDATE_SPEED = 3;
 
 // raylib ui colors
 const int GRID_COLOR = 0x212120ff;
@@ -321,7 +321,7 @@ void freeRLE(RLE rle)
 }
 
 // WEB FUNCS
-
+#if defined(PLATFORM_WEB)
 EM_JS(int, getH, (), {
     return window.innerHeight;
 });
@@ -349,6 +349,7 @@ EM_ASYNC_JS(char *, getClipText, (), {
         return 0;
     }
 });
+#endif
 
 //------------------------------------------------------------------------------------
 // Global Variables Declaration
@@ -376,14 +377,15 @@ int main(void)
 {
     // Initialization (Note windowTitle is unused on Android)
     //---------------------------------------------------------
-    ROWS = SCREEN_HEIGHT / CELL_HEIGHT;
-    COLS = SCREEN_WIDTH / CELL_WIDTH;
+
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 #if defined(PLATFORM_WEB)
     ROWS = getH() / CELL_HEIGHT;
     COLS = getW() / CELL_WIDTH;
     InitWindow(getW(), getH(), "game-of-life");
 #else
+    ROWS = SCREEN_HEIGHT / CELL_HEIGHT;
+    COLS = SCREEN_WIDTH / CELL_WIDTH;
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "game-of-life");
 #endif
     InitGame();
@@ -417,7 +419,8 @@ void UpdateGame()
 {
     if (IsKeyPressed(KEY_ONE))
     {
-        if (CELL_HEIGHT > 1 && CELL_WIDTH > 1)
+        // min visible cell_height/width is 3
+        if (CELL_HEIGHT > 3 && CELL_WIDTH > 3)
         {
             CELL_HEIGHT -= 1;
             CELL_WIDTH -= 1;
@@ -438,7 +441,7 @@ void UpdateGame()
 
     if (IsKeyPressed(KEY_THREE))
     {
-        if (UPDATE_SPEED > 0)
+        if (UPDATE_SPEED > -2)
         {
             UPDATE_SPEED -= 1;
         }
@@ -476,11 +479,11 @@ void UpdateGame()
 
     if (IsKeyPressed(KEY_H))
     {
-        // #if defined(PLATFORM_WEB)
+#if defined(PLATFORM_WEB)
         const char *clpText = getClipText();
-        // #else
-        // const char *clpText = GetClipboardText();
-        // #endif
+#else
+        const char *clpText = GetClipboardText();
+#endif
         char *clipboardText = strdup(clpText);
         if (clpText == NULL)
         {
