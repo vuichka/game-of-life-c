@@ -2,6 +2,8 @@
 
 [In English](/README.md) | [На Русском](/docs/ruREADME.md)
 
+[playground](https://my-go-blog-production.up.railway.app/posts/game-of-life/)
+
 I managed to build a game while learning several programming languages, one of them is C. You can check what a got after a couple of weeks learning here.
 
 ## Controls
